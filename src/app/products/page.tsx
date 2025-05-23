@@ -19,6 +19,7 @@ import {
   TrendingUp,
   Award,
   Zap,
+  GitCompare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +37,29 @@ import {
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog";
+import { CompareProductsModal } from "@/components/ui/compare-products-modal";
+
+// Product interface
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  price: number;
+  originalPrice?: number;
+  category: string;
+  categoryName: string;
+  brand: string;
+  rating: number;
+  reviews: number;
+  isNew: boolean;
+  isFeatured: boolean;
+  isSponsored: boolean;
+  isTrending: boolean;
+  tags: string[];
+  quickActions: string[];
+  specifications?: Record<string, string>;
+}
 
 // Brand data
 const brands = [
@@ -72,7 +96,7 @@ const brands = [
 ];
 
 // Extended product data with brands and sections
-const allProducts = [
+const allProducts: Product[] = [
   // Sponsored Products
   {
     id: "notebook-premium",
@@ -93,6 +117,16 @@ const allProducts = [
     isTrending: false,
     tags: ["premium", "hardcover", "professional"],
     quickActions: ["wishlist", "compare", "quickView"],
+    specifications: {
+      "Paper Type": "Premium 120gsm",
+      "Page Count": "200 pages",
+      Size: "A5 (148 x 210 mm)",
+      Binding: "Hardcover",
+      Ruling: "Lined",
+      "Cover Material": "Leather-bound",
+      Weight: "450g",
+      Warranty: "1 year",
+    },
   },
   {
     id: "laser-color",
@@ -113,6 +147,17 @@ const allProducts = [
     isTrending: true,
     tags: ["color", "duplex", "professional", "wireless"],
     quickActions: ["wishlist", "compare", "quickView"],
+    specifications: {
+      "Print Speed": "30 ppm color, 35 ppm mono",
+      Resolution: "1200 x 1200 dpi",
+      "Paper Capacity": "500 sheets",
+      Connectivity: "Wi-Fi, Ethernet, USB",
+      Duplex: "Automatic",
+      Memory: "512 MB",
+      Dimensions: "410 x 398 x 300 mm",
+      Weight: "18.5 kg",
+      Warranty: "3 years",
+    },
   },
 
   // Trending Products
@@ -135,6 +180,17 @@ const allProducts = [
     isTrending: true,
     tags: ["AI", "cloud", "OCR", "wireless"],
     quickActions: ["wishlist", "compare", "quickView"],
+    specifications: {
+      "Scan Speed": "25 ppm",
+      Resolution: "600 x 600 dpi",
+      "Document Size": "A4, Letter, Legal",
+      Connectivity: "Wi-Fi, USB-C",
+      "OCR Languages": "50+ languages",
+      "Cloud Storage": "Google Drive, Dropbox",
+      "Battery Life": "8 hours",
+      Weight: "1.2 kg",
+      Warranty: "2 years",
+    },
   },
   {
     id: "business-cards",
@@ -143,7 +199,7 @@ const allProducts = [
       "Premium business cards with metallic finishes and custom embossing",
     image: "/placeholder.svg?height=300&width=300",
     price: 19.99,
-    originalPrice: null,
+    originalPrice: undefined,
     category: "paper",
     categoryName: "Paper Products",
     brand: "premium",
@@ -155,6 +211,16 @@ const allProducts = [
     isTrending: true,
     tags: ["custom", "premium", "metallic", "embossing"],
     quickActions: ["wishlist", "compare", "quickView"],
+    specifications: {
+      "Card Stock": "350gsm premium",
+      Finish: "Matte with spot UV",
+      Size: "3.5 x 2 inches",
+      Quantity: "500 cards",
+      Printing: "Full color both sides",
+      Turnaround: "3-5 business days",
+      Customization: "Logo, text, colors",
+      Packaging: "Premium box",
+    },
   },
 
   // Regular Products
@@ -177,6 +243,16 @@ const allProducts = [
     isTrending: false,
     tags: ["executive", "business", "complete-set"],
     quickActions: ["wishlist", "compare", "quickView"],
+    specifications: {
+      "Paper Weight": "100gsm letterhead",
+      "Envelope Size": "DL and C5",
+      Quantity: "100 letterheads, 50 envelopes",
+      Printing: "Single color letterhead",
+      Customization: "Company logo and details",
+      Finish: "Professional matte",
+      Turnaround: "5-7 business days",
+      Packaging: "Protective sleeve",
+    },
   },
   {
     id: "brochures",
@@ -197,6 +273,16 @@ const allProducts = [
     isTrending: false,
     tags: ["tri-fold", "professional", "marketing"],
     quickActions: ["wishlist", "compare", "quickView"],
+    specifications: {
+      "Paper Stock": "200gsm gloss",
+      Size: "A4 tri-fold",
+      Printing: "Full color both sides",
+      Finish: "Gloss lamination",
+      Quantity: "250 brochures",
+      Folding: "Professional machine fold",
+      Design: "Custom layout included",
+      Turnaround: "3-5 business days",
+    },
   },
   {
     id: "journals",
@@ -217,6 +303,16 @@ const allProducts = [
     isTrending: false,
     tags: ["leather", "elegant", "premium", "italian"],
     quickActions: ["wishlist", "compare", "quickView"],
+    specifications: {
+      "Cover Material": "Genuine Italian leather",
+      "Paper Type": "Cream 90gsm",
+      "Page Count": "240 pages",
+      Size: "A5 (148 x 210 mm)",
+      Ruling: "Dot grid",
+      Closure: "Elastic band",
+      Bookmark: "Ribbon marker",
+      Weight: "380g",
+    },
   },
   {
     id: "laser-mono",
@@ -237,6 +333,17 @@ const allProducts = [
     isTrending: false,
     tags: ["high-speed", "monochrome", "office"],
     quickActions: ["wishlist", "compare", "quickView"],
+    specifications: {
+      "Print Speed": "40 ppm",
+      Resolution: "1200 x 1200 dpi",
+      "Paper Capacity": "300 sheets",
+      Connectivity: "Ethernet, USB",
+      Duplex: "Manual",
+      Memory: "256 MB",
+      Dimensions: "360 x 360 x 280 mm",
+      Weight: "12.8 kg",
+      Warranty: "2 years",
+    },
   },
   {
     id: "toner-cartridge",
@@ -257,6 +364,16 @@ const allProducts = [
     isTrending: false,
     tags: ["long-lasting", "compatible", "replacement"],
     quickActions: ["wishlist", "compare", "quickView"],
+    specifications: {
+      "Page Yield": "3000 pages",
+      Compatibility: "HP, Canon, Brother",
+      Color: "Black toner",
+      Quality: "OEM equivalent",
+      Chip: "Smart chip included",
+      Packaging: "Individual boxes",
+      "Shelf Life": "24 months",
+      Warranty: "1 year defect-free",
+    },
   },
   {
     id: "wireless-keyboard",
@@ -277,6 +394,16 @@ const allProducts = [
     isTrending: false,
     tags: ["ergonomic", "wireless", "RGB", "premium"],
     quickActions: ["wishlist", "compare", "quickView"],
+    specifications: {
+      "Key Switches": "Mechanical blue switches",
+      Connectivity: "2.4GHz wireless + Bluetooth",
+      "Battery Life": "30 days",
+      Backlighting: "RGB per-key",
+      Layout: "Full-size 104 keys",
+      Compatibility: "Windows, Mac, Linux",
+      Dimensions: "440 x 135 x 35 mm",
+      Weight: "980g",
+    },
   },
   {
     id: "office-tablet",
@@ -297,6 +424,16 @@ const allProducts = [
     isTrending: false,
     tags: ["business", "digital", "note-taking", "12.9-inch"],
     quickActions: ["wishlist", "compare", "quickView"],
+    specifications: {
+      Display: "12.9-inch Retina",
+      Resolution: "2732 x 2048 pixels",
+      Processor: "A15 Bionic chip",
+      Storage: "256GB",
+      RAM: "8GB",
+      "Battery Life": "10 hours",
+      Connectivity: "Wi-Fi 6, Bluetooth 5.0",
+      Weight: "682g",
+    },
   },
 ];
 
@@ -333,11 +470,11 @@ export default function ProductsPage() {
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<
-    (typeof allProducts)[0] | null
-  >(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [compareProducts, setCompareProducts] = useState<Product[]>([]);
+  const [showCompareModal, setShowCompareModal] = useState(false);
 
   const router = useRouter();
 
@@ -431,10 +568,30 @@ export default function ProductsPage() {
     );
   };
 
-  const handleQuickAction = (
-    action: string,
-    product: (typeof allProducts)[0]
-  ) => {
+  const addToCompare = (product: Product) => {
+    setCompareProducts((prev) => {
+      // Check if product is already in compare list
+      if (prev.find((p) => p.id === product.id)) {
+        return prev;
+      }
+      // Limit to 4 products for comparison
+      if (prev.length >= 4) {
+        return [...prev.slice(1), product];
+      }
+      return [...prev, product];
+    });
+  };
+
+  const removeFromCompare = (productId: string) => {
+    setCompareProducts((prev) => prev.filter((p) => p.id !== productId));
+  };
+
+  const clearCompareList = () => {
+    setCompareProducts([]);
+    setShowCompareModal(false);
+  };
+
+  const handleQuickAction = (action: string, product: Product) => {
     switch (action) {
       case "wishlist":
         toggleFavorite(product.id);
@@ -443,8 +600,7 @@ export default function ProductsPage() {
         setSelectedProduct(product);
         break;
       case "compare":
-        // Handle compare action
-        console.log("Compare:", product.name);
+        addToCompare(product);
         break;
       default:
         break;
@@ -513,6 +669,15 @@ export default function ProductsPage() {
               <span className="text-sm text-gray-600 backdrop-filter backdrop-blur-md bg-white/30 px-3 py-1 rounded-full border border-white/40">
                 {filteredProducts.length} products
               </span>
+              {compareProducts.length > 0 && (
+                <Button
+                  onClick={() => setShowCompareModal(true)}
+                  className="bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 border-0 shadow-lg text-white"
+                >
+                  <GitCompare className="h-4 w-4 mr-2" />
+                  Compare ({compareProducts.length})
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -893,7 +1058,7 @@ export default function ProductsPage() {
         open={!!selectedProduct}
         onOpenChange={(open) => !open && setSelectedProduct(null)}
       >
-        <DialogContent className="max-w-6xl p-0 rounded-3xl overflow-hidden backdrop-filter backdrop-blur-xl bg-white/90 border border-white/60 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-[90%] xl:max-w-[80%] p-0 rounded-3xl overflow-hidden backdrop-filter backdrop-blur-xl bg-white/90 border border-white/60 shadow-2xl max-h-[90vh] overflow-y-auto">
           {selectedProduct && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -1113,7 +1278,7 @@ export default function ProductsPage() {
                   </div>
 
                   {/* Additional Info */}
-                  <div className="backdrop-filter backdrop-blur-md bg-white/30 border border-white/40 rounded-2xl p-6">
+                  <div className="backdrop-filter backdrop-blur-md bg-white/30 border  border-white/40 rounded-2xl p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-3">
                       Product Information
                     </h3>
@@ -1147,19 +1312,31 @@ export default function ProductsPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Compare Products Modal */}
+      <CompareProductsModal
+        isOpen={showCompareModal}
+        onClose={() => setShowCompareModal(false)}
+        products={compareProducts}
+        brands={brands}
+        favorites={favorites}
+        onToggleFavorite={toggleFavorite}
+        onRemoveProduct={removeFromCompare}
+        onClearAll={clearCompareList}
+      />
     </div>
   );
 }
 
 // Enhanced Product Card Component
 interface ProductCardProps {
-  product: (typeof allProducts)[0];
+  product: Product;
   index: number;
   viewMode: "grid" | "list";
   favorites: string[];
   onToggleFavorite: (id: string) => void;
-  onQuickAction: (action: string, product: (typeof allProducts)[0]) => void;
-  onViewDetails: (product: (typeof allProducts)[0]) => void;
+  onQuickAction: (action: string, product: Product) => void;
+  onViewDetails: (product: Product) => void;
   isHorizontalScroll?: boolean;
 }
 
@@ -1274,7 +1451,7 @@ function ProductCard({
               onClick={() => onQuickAction("compare", product)}
               className="w-10 h-10 p-0 rounded-full backdrop-filter backdrop-blur-md bg-white/40 border border-white/50 text-gray-600 hover:bg-white/60 shadow-lg"
             >
-              <Plus className="h-4 w-4" />
+              <GitCompare className="h-4 w-4" />
             </Button>
           </motion.div>
         )}
