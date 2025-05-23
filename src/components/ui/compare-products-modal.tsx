@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import { X, ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -134,46 +134,55 @@ export function CompareProductsModal({
     { value: "250+", label: "$250+" },
   ];
 
-  // Handle horizontal scroll
-  const handleScroll = (direction: "left" | "right") => {
-    const container = document.getElementById("compare-scroll-container");
-    if (container) {
-      const scrollAmount = 320; // Width of one card
-      const newPosition =
-        direction === "left"
-          ? Math.max(0, scrollPosition - scrollAmount)
-          : Math.min(
-              container.scrollWidth - container.clientWidth,
-              scrollPosition + scrollAmount
-            );
+  // Handle horizontal scroll with memoized callback
+  const handleScroll = useCallback(
+    (direction: "left" | "right") => {
+      const container = document.getElementById("compare-scroll-container");
+      if (container) {
+        const scrollAmount = 320; // Width of one card
+        const newPosition =
+          direction === "left"
+            ? Math.max(0, scrollPosition - scrollAmount)
+            : Math.min(
+                container.scrollWidth - container.clientWidth,
+                scrollPosition + scrollAmount
+              );
 
-      container.scrollTo({ left: newPosition, behavior: "smooth" });
-      setScrollPosition(newPosition);
-    }
-  };
+        container.scrollTo({ left: newPosition, behavior: "smooth" });
+        setScrollPosition(newPosition);
+      }
+    },
+    [scrollPosition]
+  );
 
   useEffect(() => {
-    const container = document.getElementById("compare-scroll-container");
-    if (container) {
-      const handleScrollUpdate = () => {
+    // Wait for DOM to be ready
+    const timeout = setTimeout(() => {
+      const container = document.getElementById("compare-scroll-container");
+      if (container) {
+        const handleScrollUpdate = () => {
+          setScrollPosition(container.scrollLeft);
+        };
+
+        // Initial position
         setScrollPosition(container.scrollLeft);
-      };
-      container.addEventListener("scroll", handleScrollUpdate);
-      return () => container.removeEventListener("scroll", handleScrollUpdate);
-    }
+
+        container.addEventListener("scroll", handleScrollUpdate);
+        return () => {
+          container.removeEventListener("scroll", handleScrollUpdate);
+        };
+      }
+    }, 100);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   if (!isOpen) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[95%] xl:max-w-[80%] max-h-[95vh] p-0 overflow-y-scroll rounded-3xl overflow-hidden backdrop-filter backdrop-blur-xl bg-white/90 border border-white/60 shadow-2xl">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          className="relative h-full flex flex-col"
-        >
+      <DialogContent className="max-w-[95%] xl:max-w-[80%] max-h-[95vh] p-0 overflow-hidden rounded-3xl backdrop-filter backdrop-blur-xl bg-white/90 border border-white/60 shadow-2xl">
+        <div className="relative h-full flex flex-col">
           {/* Enhanced Header */}
           <DialogHeader className="p-6 border-b border-white/30 backdrop-filter backdrop-blur-md bg-white/30 sticky top-0 z-20">
             <div className="flex items-center justify-between">
@@ -206,12 +215,14 @@ export function CompareProductsModal({
           </DialogHeader>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-scroll">
+          <div className="flex-1 overflow-hidden flex flex-col">
             {products.length === 0 ? (
               // Empty State
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                style={{ willChange: "transform" }}
                 className="flex items-center justify-center h-full p-12"
               >
                 <div className="text-center backdrop-filter backdrop-blur-xl bg-white/25 border border-white/40 rounded-3xl p-12 max-w-md shadow-2xl">
@@ -274,13 +285,9 @@ export function CompareProductsModal({
                 </div>
 
                 {/* Products Comparison */}
-                <div className="flex-1 relative">
+                <div className="flex-1 relative overflow-y-scroll">
                   {filteredProducts.length === 0 ? (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center justify-center h-full p-12"
-                    >
+                    <div className="flex items-center justify-center h-full overflow-y-scroll p-12">
                       <div className="text-center backdrop-filter backdrop-blur-xl bg-white/25 border border-white/40 rounded-3xl p-8 max-w-md shadow-2xl">
                         <h3 className="text-xl font-bold text-gray-900 mb-2 font-display">
                           No Products Match Filters
@@ -297,11 +304,11 @@ export function CompareProductsModal({
                           Clear Filters
                         </Button>
                       </div>
-                    </motion.div>
+                    </div>
                   ) : (
                     <>
                       {/* Scroll Navigation */}
-                      {filteredProducts.length > 3 && (
+                      {filteredProducts.length > 2 && (
                         <>
                           <Button
                             variant="ghost"
@@ -309,6 +316,7 @@ export function CompareProductsModal({
                             onClick={() => handleScroll("left")}
                             disabled={scrollPosition <= 0}
                             className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full backdrop-filter backdrop-blur-md bg-white/40 border border-white/50 hover:bg-white/60 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                            aria-label="Scroll left"
                           >
                             <ArrowLeft className="h-5 w-5" />
                           </Button>
@@ -317,6 +325,7 @@ export function CompareProductsModal({
                             size="sm"
                             onClick={() => handleScroll("right")}
                             className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full backdrop-filter backdrop-blur-md bg-white/40 border border-white/50 hover:bg-white/60 shadow-lg"
+                            aria-label="Scroll right"
                           >
                             <ArrowRight className="h-5 w-5" />
                           </Button>
@@ -326,35 +335,34 @@ export function CompareProductsModal({
                       {/* Products Grid */}
                       <div
                         id="compare-scroll-container"
-                        className="h-full overflow-x-auto overflow-y-scroll p-6"
+                        className="h-full w-full overflow-x-auto overflow-y-auto p-6"
                         style={{
                           scrollbarWidth: "thin",
                           scrollbarColor:
                             "rgba(255, 255, 255, 0.3) transparent",
+                          overscrollBehaviorX: "contain",
                         }}
                       >
-                        <div className="flex space-x-6 min-h-full">
-                          <AnimatePresence>
-                            {filteredProducts.map((product, index) => {
-                              const brand = brands.find(
-                                (b) => b.id === product.brand
-                              );
-                              if (!brand) return null;
+                        <div className="flex space-x-6 min-h-full min-w-max">
+                          {filteredProducts.map((product) => {
+                            const brand = brands.find(
+                              (b) => b.id === product.brand
+                            );
+                            if (!brand) return null;
 
-                              return (
-                                <CompareCard
-                                  key={product.id}
-                                  product={product}
-                                  brand={brand}
-                                  onRemove={onRemoveProduct}
-                                  onToggleFavorite={onToggleFavorite}
-                                  isFavorite={favorites.includes(product.id)}
-                                  highlightedSpec={highlightedSpec}
-                                  onSpecHover={setHighlightedSpec}
-                                />
-                              );
-                            })}
-                          </AnimatePresence>
+                            return (
+                              <CompareCard
+                                key={product.id}
+                                product={product}
+                                brand={brand}
+                                onRemove={onRemoveProduct}
+                                onToggleFavorite={onToggleFavorite}
+                                isFavorite={favorites.includes(product.id)}
+                                highlightedSpec={highlightedSpec}
+                                onSpecHover={setHighlightedSpec}
+                              />
+                            );
+                          })}
                         </div>
                       </div>
                     </>
@@ -368,7 +376,10 @@ export function CompareProductsModal({
                       Detailed Specifications Comparison
                     </h3>
                     <div className="backdrop-filter backdrop-blur-xl bg-white/25 border border-white/40 rounded-2xl overflow-hidden">
-                      <div className="overflow-x-auto">
+                      <div
+                        className="overflow-x-auto"
+                        style={{ transform: "translateZ(0)" }}
+                      >
                         <table className="w-full">
                           <thead>
                             <tr className="border-b border-white/30">
@@ -387,11 +398,11 @@ export function CompareProductsModal({
                           </thead>
                           <tbody>
                             {allSpecs.map((spec) => (
-                              <motion.tr
+                              <tr
                                 key={spec}
-                                onHoverStart={() => setHighlightedSpec(spec)}
-                                onHoverEnd={() => setHighlightedSpec(null)}
-                                className={`border-b border-white/20 transition-all duration-300 ${
+                                onMouseEnter={() => setHighlightedSpec(spec)}
+                                onMouseLeave={() => setHighlightedSpec(null)}
+                                className={`border-b border-white/20 transition-colors duration-100 ${
                                   highlightedSpec === spec
                                     ? "bg-amber-100/40"
                                     : "hover:bg-white/30"
@@ -408,7 +419,7 @@ export function CompareProductsModal({
                                     {product.specifications?.[spec] || "—"}
                                   </td>
                                 ))}
-                              </motion.tr>
+                              </tr>
                             ))}
                           </tbody>
                         </table>
@@ -419,7 +430,7 @@ export function CompareProductsModal({
               </div>
             )}
           </div>
-        </motion.div>
+        </div>
       </DialogContent>
     </Dialog>
   );

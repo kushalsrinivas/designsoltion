@@ -39,7 +39,7 @@ interface CompareCardProps {
   onRemove: (productId: string) => void;
   onToggleFavorite: (productId: string) => void;
   isFavorite: boolean;
-  highlightedSpec?: string;
+  highlightedSpec?: string | null;
   onSpecHover?: (spec: string | null) => void;
 }
 
@@ -67,17 +67,20 @@ export function CompareCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      whileHover={{ scale: 1.01 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      className="relative backdrop-filter backdrop-blur-xl bg-white/20 border border-white/40 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] min-w-[320px] max-w-[380px]"
       style={{
+        willChange: "transform",
         boxShadow: isHovered
           ? "0 25px 50px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.3)"
           : "0 20px 40px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.9)",
       }}
+      className="relative backdrop-filter backdrop-blur-xl bg-white/20 border border-white/40 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-200 min-w-[320px] w-[320px] max-w-[320px] shrink-0"
     >
       {/* Remove Button */}
       <Button
@@ -111,11 +114,7 @@ export function CompareCard({
       <div className="p-6">
         {/* Product Image */}
         <div className="relative w-full h-48 mb-6 rounded-2xl overflow-hidden backdrop-filter backdrop-blur-md bg-white/20 border border-white/30">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-            className="w-full h-full"
-          >
+          <div className="w-full h-full transition-all duration-300 hover:scale-105">
             <Image
               src={product.image}
               alt={product.name}
@@ -123,7 +122,7 @@ export function CompareCard({
               height={300}
               className="object-contain w-full h-full p-4"
             />
-          </motion.div>
+          </div>
         </div>
 
         {/* Brand Info */}
@@ -191,11 +190,11 @@ export function CompareCard({
             Specifications
           </h4>
           {Object.entries(specifications).map(([key, value]) => (
-            <motion.div
+            <div
               key={key}
-              onHoverStart={() => onSpecHover?.(key)}
-              onHoverEnd={() => onSpecHover?.(null)}
-              className={`p-3 rounded-xl backdrop-filter backdrop-blur-md border transition-all duration-300 ${
+              onMouseEnter={() => onSpecHover?.(key)}
+              onMouseLeave={() => onSpecHover?.(null)}
+              className={`p-3 rounded-xl backdrop-filter backdrop-blur-md border transition-colors duration-150 ${
                 highlightedSpec === key
                   ? "bg-amber-100/60 border-amber-300/60 shadow-lg shadow-amber-400/20"
                   : "bg-white/30 border-white/40 hover:bg-white/50"
@@ -205,7 +204,7 @@ export function CompareCard({
                 {key}
               </div>
               <div className="text-sm text-gray-900 font-medium">{value}</div>
-            </motion.div>
+            </div>
           ))}
         </div>
 

@@ -38,6 +38,24 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { CompareProductsModal } from "@/components/ui/compare-products-modal";
+import { WishlistToggle } from "@/components/ui/wishlist-toggle";
+import { AddToCartButton } from "@/components/ui/add-to-cart-button";
+import { CartSidebar, type CartItem } from "@/components/ui/cart-sidebar";
+import { WishlistPage } from "@/components/ui/wishlist-page";
+import { CheckoutPage } from "@/components/ui/checkout-page";
+import { ToastContainer, type Toast } from "@/components/ui/toast-notification";
+
+interface OrderData {
+  orderNumber: string;
+  items: CartItem[];
+  deliveryDetails: any;
+  paymentMethod: any;
+  subtotal: number;
+  shipping: number;
+  discount: number;
+  total: number;
+  estimatedDelivery: string;
+}
 
 // Product interface
 interface Product {
@@ -476,13 +494,59 @@ export default function ProductsPage() {
   const [compareProducts, setCompareProducts] = useState<Product[]>([]);
   const [showCompareModal, setShowCompareModal] = useState(false);
 
+  // New state for cart, wishlist, and checkout
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [showCartSidebar, setShowCartSidebar] = useState(false);
+  const [showWishlistPage, setShowWishlistPage] = useState(false);
+  const [showCheckoutPage, setShowCheckoutPage] = useState(false);
+  const [toasts, setToasts] = useState<Toast[]>([]);
+
   const router = useRouter();
+
+  // Load favorites and cart from localStorage
+  useEffect(() => {
+    const savedFavorites = localStorage.getItem("favorites");
+    if (savedFavorites) {
+      setFavorites(JSON.parse(savedFavorites));
+    }
+
+    const savedCart = localStorage.getItem("cartItems");
+    if (savedCart) {
+      setCartItems(JSON.parse(savedCart));
+    }
+  }, []);
+
+  // Save favorites to localStorage
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
+
+  // Save cart to localStorage
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   // Simulate loading
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  // Toast management
+  const addToast = (toast: Omit<Toast, "id">) => {
+    const id = Date.now().toString();
+    const newToast = { ...toast, id };
+    setToasts((prev) => [...prev, newToast]);
+
+    // Auto remove toast after duration
+    setTimeout(() => {
+      removeToast(id);
+    }, toast.duration || 5000);
+  };
+
+  const removeToast = (id: string) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
 
   // Filter and sort products
   const filteredProducts = useMemo(() => {
@@ -561,23 +625,151 @@ export default function ProductsPage() {
   );
 
   const toggleFavorite = (productId: string) => {
-    setFavorites((prev) =>
-      prev.includes(productId)
+    const product = allProducts.find((p) => p.id === productId);
+    if (!product) return;
+
+    setFavorites((prev) => {
+      const isCurrentlyFavorited = prev.includes(productId);
+      const newFavorites = isCurrentlyFavorited
         ? prev.filter((id) => id !== productId)
-        : [...prev, productId]
+        : [...prev, productId];
+
+      // Show toast notification
+      addToast({
+        type: "success",
+        title: isCurrentlyFavorited
+          ? "Removed from Wishlist"
+          : "Added to Wishlist",
+        message: isCurrentlyFavorited
+          ? `${product.name} removed from your wishlist`
+          : `${product.name} added to your wishlist`,
+        action: "wishlist",
+        productImage: product.image,
+        productName: product.name,
+      });
+
+      return newFavorites;
+    });
+  };
+
+  const addToCart = (product: {
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+  }) => {
+    const fullProduct = allProducts.find((p) => p.id === product.id);
+    const brand = brands.find((b) => b.id === fullProduct?.brand);
+
+    setCartItems((prev) => {
+      const existingItem = prev.find((item) => item.id === product.id);
+
+      if (existingItem) {
+        const updatedItems = prev.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+
+        addToast({
+          type: "success",
+          title: "Quantity Updated",
+          message: `${product.name} quantity increased in cart`,
+          action: "cart",
+          productImage: product.image,
+          productName: product.name,
+        });
+
+        return updatedItems;
+      }
+
+      const newItem: CartItem = {
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: 1,
+        brand: brand?.name,
+      };
+
+      addToast({
+        type: "success",
+        title: "Added to Cart",
+        message: `${product.name} added to your cart`,
+        action: "cart",
+        productImage: product.image,
+        productName: product.name,
+      });
+
+      return [...prev, newItem];
+    });
+  };
+
+  const updateCartQuantity = (id: string, quantity: number) => {
+    if (quantity === 0) {
+      removeFromCart(id);
+      return;
+    }
+
+    setCartItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, quantity } : item))
     );
+  };
+
+  const removeFromCart = (id: string) => {
+    const item = cartItems.find((item) => item.id === id);
+    setCartItems((prev) => prev.filter((item) => item.id !== id));
+
+    if (item) {
+      addToast({
+        type: "info",
+        title: "Removed from Cart",
+        message: `${item.name} removed from your cart`,
+      });
+    }
+  };
+
+  const handleCheckout = () => {
+    setShowCartSidebar(false);
+    setShowCheckoutPage(true);
+  };
+
+  const handleOrderComplete = (orderData: OrderData) => {
+    setCartItems([]);
+    addToast({
+      type: "success",
+      title: "Order Placed Successfully!",
+      message: `Order ${orderData.orderNumber} has been confirmed`,
+      duration: 8000,
+    });
   };
 
   const addToCompare = (product: Product) => {
     setCompareProducts((prev) => {
-      // Check if product is already in compare list
       if (prev.find((p) => p.id === product.id)) {
+        addToast({
+          type: "info",
+          title: "Already in Comparison",
+          message: `${product.name} is already in your comparison list`,
+        });
         return prev;
       }
-      // Limit to 4 products for comparison
+
       if (prev.length >= 4) {
-        return [...prev.slice(1), product];
+        const updatedList = [...prev.slice(1), product];
+        addToast({
+          type: "success",
+          title: "Added to Compare",
+          message: `${product.name} added to comparison (oldest item removed)`,
+        });
+        return updatedList;
       }
+
+      addToast({
+        type: "success",
+        title: "Added to Compare",
+        message: `${product.name} added to comparison`,
+      });
       return [...prev, product];
     });
   };
@@ -606,6 +798,35 @@ export default function ProductsPage() {
         break;
     }
   };
+
+  // Get favorited products for wishlist page
+  const favoritedProducts = allProducts.filter((product) =>
+    favorites.includes(product.id)
+  );
+
+  // Show checkout page
+  if (showCheckoutPage) {
+    return (
+      <CheckoutPage
+        items={cartItems}
+        onBack={() => setShowCheckoutPage(false)}
+        onOrderComplete={handleOrderComplete}
+      />
+    );
+  }
+
+  // Show wishlist page
+  if (showWishlistPage) {
+    return (
+      <WishlistPage
+        products={favoritedProducts}
+        brands={brands}
+        onRemoveFromWishlist={toggleFavorite}
+        onAddToCart={addToCart}
+        onBack={() => setShowWishlistPage(false)}
+      />
+    );
+  }
 
   if (isLoading) {
     return (
@@ -666,6 +887,28 @@ export default function ProductsPage() {
             </div>
 
             <div className="flex items-center space-x-2">
+              {/* Wishlist Button */}
+              <Button
+                onClick={() => setShowWishlistPage(true)}
+                variant="ghost"
+                size="sm"
+                className="backdrop-filter backdrop-blur-md bg-white/30 hover:bg-white/50 border border-white/40 shadow-lg transition-all duration-300"
+              >
+                <Heart className="h-4 w-4 mr-2" />
+                Wishlist ({favorites.length})
+              </Button>
+
+              {/* Cart Button */}
+              <Button
+                onClick={() => setShowCartSidebar(true)}
+                variant="ghost"
+                size="sm"
+                className="backdrop-filter backdrop-blur-md bg-white/30 hover:bg-white/50 border border-white/40 shadow-lg transition-all duration-300"
+              >
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                Cart ({cartItems.reduce((sum, item) => sum + item.quantity, 0)})
+              </Button>
+
               <span className="text-sm text-gray-600 backdrop-filter backdrop-blur-md bg-white/30 px-3 py-1 rounded-full border border-white/40">
                 {filteredProducts.length} products
               </span>
@@ -937,6 +1180,7 @@ export default function ProductsPage() {
                       onToggleFavorite={toggleFavorite}
                       onQuickAction={handleQuickAction}
                       onViewDetails={setSelectedProduct}
+                      onAddToCart={addToCart}
                       isHorizontalScroll={true}
                     />
                   ))}
@@ -980,6 +1224,7 @@ export default function ProductsPage() {
                       onToggleFavorite={toggleFavorite}
                       onQuickAction={handleQuickAction}
                       onViewDetails={setSelectedProduct}
+                      onAddToCart={addToCart}
                       isHorizontalScroll={true}
                     />
                   ))}
@@ -1044,6 +1289,7 @@ export default function ProductsPage() {
                       onToggleFavorite={toggleFavorite}
                       onQuickAction={handleQuickAction}
                       onViewDetails={setSelectedProduct}
+                      onAddToCart={addToCart}
                     />
                   ))}
                 </div>
@@ -1240,34 +1486,26 @@ export default function ProductsPage() {
 
                   {/* Action Buttons */}
                   <div className="flex flex-col space-y-3">
-                    <Button className="w-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 border-0 shadow-lg text-lg py-6 rounded-2xl">
-                      <ShoppingCart className="h-5 w-5 mr-3" />
-                      Add to Cart - ${selectedProduct.price}
-                    </Button>
+                    <AddToCartButton
+                      productId={selectedProduct.id}
+                      productName={selectedProduct.name}
+                      price={selectedProduct.price}
+                      image={selectedProduct.image}
+                      onAddToCart={addToCart}
+                      className="w-full"
+                      size="lg"
+                    />
 
                     <div className="grid grid-cols-2 gap-3">
-                      <Button
-                        onClick={() => toggleFavorite(selectedProduct.id)}
-                        variant="outline"
-                        className={`backdrop-filter backdrop-blur-md border-white/50 hover:bg-white/60 py-3 rounded-2xl ${
-                          favorites.includes(selectedProduct.id)
-                            ? "bg-rose-500/20 border-rose-400/60 text-rose-600"
-                            : "bg-white/40"
-                        }`}
-                      >
-                        <Heart
-                          className={`h-4 w-4 mr-2 ${
-                            favorites.includes(selectedProduct.id)
-                              ? "fill-current"
-                              : ""
-                          }`}
-                        />
-                        {favorites.includes(selectedProduct.id)
-                          ? "Favorited"
-                          : "Add to Wishlist"}
-                      </Button>
+                      <WishlistToggle
+                        productId={selectedProduct.id}
+                        isFavorited={favorites.includes(selectedProduct.id)}
+                        onToggle={toggleFavorite}
+                        className="flex-1"
+                      />
 
                       <Button
+                        onClick={() => addToCompare(selectedProduct)}
                         variant="outline"
                         className="backdrop-filter backdrop-blur-md bg-white/40 border-white/50 hover:bg-white/60 py-3 rounded-2xl"
                       >
@@ -1313,6 +1551,16 @@ export default function ProductsPage() {
         </DialogContent>
       </Dialog>
 
+      {/* Cart Sidebar */}
+      <CartSidebar
+        isOpen={showCartSidebar}
+        onClose={() => setShowCartSidebar(false)}
+        items={cartItems}
+        onUpdateQuantity={updateCartQuantity}
+        onRemoveItem={removeFromCart}
+        onCheckout={handleCheckout}
+      />
+
       {/* Compare Products Modal */}
       <CompareProductsModal
         isOpen={showCompareModal}
@@ -1324,11 +1572,14 @@ export default function ProductsPage() {
         onRemoveProduct={removeFromCompare}
         onClearAll={clearCompareList}
       />
+
+      {/* Toast Notifications */}
+      <ToastContainer toasts={toasts} onClose={removeToast} />
     </div>
   );
 }
 
-// Enhanced Product Card Component
+// Enhanced Product Card Component with new features
 interface ProductCardProps {
   product: Product;
   index: number;
@@ -1337,6 +1588,12 @@ interface ProductCardProps {
   onToggleFavorite: (id: string) => void;
   onQuickAction: (action: string, product: Product) => void;
   onViewDetails: (product: Product) => void;
+  onAddToCart: (product: {
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+  }) => void;
   isHorizontalScroll?: boolean;
 }
 
@@ -1348,6 +1605,7 @@ function ProductCard({
   onToggleFavorite,
   onQuickAction,
   onViewDetails,
+  onAddToCart,
   isHorizontalScroll = false,
 }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
@@ -1421,22 +1679,12 @@ function ProductCard({
             exit={{ opacity: 0, x: 20 }}
             className="absolute top-4 right-4 z-10 flex flex-col space-y-2"
           >
-            <Button
-              variant="ghost"
+            <WishlistToggle
+              productId={product.id}
+              isFavorited={favorites.includes(product.id)}
+              onToggle={onToggleFavorite}
               size="sm"
-              onClick={() => onToggleFavorite(product.id)}
-              className={`w-10 h-10 p-0 rounded-full backdrop-filter backdrop-blur-md border shadow-lg transition-all duration-300 ${
-                favorites.includes(product.id)
-                  ? "bg-rose-500/80 border-rose-400/60 text-white"
-                  : "bg-white/40 border-white/50 text-gray-600 hover:bg-white/60"
-              }`}
-            >
-              <Heart
-                className={`h-4 w-4 ${
-                  favorites.includes(product.id) ? "fill-current" : ""
-                }`}
-              />
-            </Button>
+            />
             <Button
               variant="ghost"
               size="sm"
@@ -1540,13 +1788,15 @@ function ProductCard({
           >
             View Details
           </Button>
-          <Button
+          <AddToCartButton
+            productId={product.id}
+            productName={product.name}
+            price={product.price}
+            image={product.image}
+            onAddToCart={onAddToCart}
             size="sm"
-            className="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 border-0 shadow-lg"
-          >
-            <ShoppingCart className="h-4 w-4 mr-1" />
-            Add to Cart
-          </Button>
+            showText={false}
+          />
         </div>
       </div>
     </motion.div>
