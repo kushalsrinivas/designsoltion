@@ -45,11 +45,31 @@ import { WishlistPage } from "@/components/ui/wishlist-page";
 import { CheckoutPage } from "@/components/ui/checkout-page";
 import { ToastContainer, type Toast } from "@/components/ui/toast-notification";
 
+interface DeliveryDetails {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
+
+interface PaymentMethod {
+  type: string;
+  cardNumber?: string;
+  expiryDate?: string;
+  cvv?: string;
+  cardholderName?: string;
+}
+
 interface OrderData {
   orderNumber: string;
   items: CartItem[];
-  deliveryDetails: any;
-  paymentMethod: any;
+  deliveryDetails: DeliveryDetails;
+  paymentMethod: PaymentMethod;
   subtotal: number;
   shipping: number;
   discount: number;
@@ -84,31 +104,31 @@ const brands = [
   {
     id: "designit",
     name: "DesignIt Solutions",
-    logo: "/placeholder.svg?height=40&width=120",
+    logo: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=120&h=40&fit=crop&crop=center",
     color: "from-blue-500 to-blue-600",
   },
   {
     id: "papercraft",
     name: "PaperCraft Pro",
-    logo: "/placeholder.svg?height=40&width=120",
+    logo: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=120&h=40&fit=crop&crop=center",
     color: "from-green-500 to-green-600",
   },
   {
     id: "lasertech",
     name: "LaserTech",
-    logo: "/placeholder.svg?height=40&width=120",
+    logo: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=120&h=40&fit=crop&crop=center",
     color: "from-purple-500 to-purple-600",
   },
   {
     id: "smartoffice",
     name: "SmartOffice",
-    logo: "/placeholder.svg?height=40&width=120",
+    logo: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=120&h=40&fit=crop&crop=center",
     color: "from-orange-500 to-orange-600",
   },
   {
     id: "premium",
     name: "Premium Plus",
-    logo: "/placeholder.svg?height=40&width=120",
+    logo: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=120&h=40&fit=crop&crop=center",
     color: "from-rose-500 to-rose-600",
   },
 ];
@@ -121,7 +141,8 @@ const allProducts: Product[] = [
     name: "Premium Notebook Collection",
     description:
       "Luxury hardcover notebooks with premium paper for executive note-taking",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=400&fit=crop&crop=center",
     price: 12.99,
     originalPrice: 15.99,
     category: "paper",
@@ -151,7 +172,8 @@ const allProducts: Product[] = [
     name: "ColorJet X5000 Pro",
     description:
       "Professional color laser printer with duplex printing and wireless connectivity",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&h=400&fit=crop&crop=center",
     price: 499.99,
     originalPrice: 599.99,
     category: "printers",
@@ -184,7 +206,8 @@ const allProducts: Product[] = [
     name: "SmartScan Pro 2024",
     description:
       "AI-powered document scanner with cloud integration and OCR technology",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=400&fit=crop&crop=center",
     price: 179.99,
     originalPrice: 199.99,
     category: "electronics",
@@ -215,7 +238,8 @@ const allProducts: Product[] = [
     name: "Executive Business Cards",
     description:
       "Premium business cards with metallic finishes and custom embossing",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=center",
     price: 19.99,
     originalPrice: undefined,
     category: "paper",
@@ -247,7 +271,8 @@ const allProducts: Product[] = [
     name: "Executive Stationery Set",
     description:
       "Complete stationery set with letterhead and envelopes for business correspondence",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=400&fit=crop&crop=center",
     price: 24.99,
     originalPrice: 29.99,
     category: "paper",
@@ -277,7 +302,8 @@ const allProducts: Product[] = [
     name: "Tri-fold Marketing Brochures",
     description:
       "Professional brochures with high-quality printing and vibrant colors",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=400&fit=crop&crop=center",
     price: 29.99,
     originalPrice: 34.99,
     category: "paper",
@@ -307,7 +333,8 @@ const allProducts: Product[] = [
     name: "Leather-bound Executive Journals",
     description:
       "Elegant journals with premium paper and genuine Italian leather binding",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400&h=400&fit=crop&crop=center",
     price: 34.99,
     originalPrice: 39.99,
     category: "paper",
@@ -337,7 +364,8 @@ const allProducts: Product[] = [
     name: "LaserJet Pro Mono M404",
     description:
       "High-speed monochrome laser printer perfect for office environments",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&h=400&fit=crop&crop=center",
     price: 249.99,
     originalPrice: 299.99,
     category: "printers",
@@ -368,7 +396,8 @@ const allProducts: Product[] = [
     name: "Premium Toner Cartridge Set",
     description:
       "Long-lasting toner cartridges compatible with all major printer models",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&h=400&fit=crop&crop=center",
     price: 79.99,
     originalPrice: 89.99,
     category: "printers",
@@ -398,7 +427,8 @@ const allProducts: Product[] = [
     name: "ErgoType Wireless Keyboard Pro",
     description:
       "Ergonomic wireless keyboard with customizable RGB keys and premium switches",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&h=400&fit=crop&crop=center",
     price: 89.99,
     originalPrice: 109.99,
     category: "electronics",
@@ -428,7 +458,8 @@ const allProducts: Product[] = [
     name: "OfficePad Pro 12.9",
     description:
       "Professional tablet designed for business applications and digital note-taking",
-    image: "/placeholder.svg?height=300&width=300",
+    image:
+      "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop&crop=center",
     price: 349.99,
     originalPrice: 399.99,
     category: "electronics",
