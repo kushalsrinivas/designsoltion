@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, Plus, X, ChevronRight } from "lucide-react";
@@ -160,16 +161,17 @@ export default function ProductsSection() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isInView, setIsInView] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const router = useRouter();
 
   // Handle scroll-based animations
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        for (const entry of entries) {
           if (entry.isIntersecting) {
             setIsInView(true);
           }
-        });
+        }
       },
       { threshold: 0.1 }
     );
@@ -202,14 +204,14 @@ export default function ProductsSection() {
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
         {/* Original blobs */}
-        <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-3000"></div>
-        <div className="absolute bottom-20 -left-20 w-64 h-64 bg-rose-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute -top-20 -right-20 w-64 h-64 bg-green-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-3000" />
+        <div className="absolute bottom-20 -left-20 w-64 h-64 bg-rose-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
 
         {/* Additional floating blobs */}
-        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-amber-200 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob animation-delay-4000"></div>
-        <div className="absolute top-2/3 left-1/3 w-48 h-48 bg-rose-100 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob animation-delay-1000"></div>
-        <div className="absolute top-1/2 right-1/2 w-56 h-56 bg-amber-100 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-5000"></div>
+        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-amber-200 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob animation-delay-2000" />
+        <div className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob animation-delay-4000" />
+        <div className="absolute top-2/3 left-1/3 w-48 h-48 bg-rose-100 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob animation-delay-1000" />
+        <div className="absolute top-1/2 right-1/2 w-56 h-56 bg-amber-100 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-5000" />
 
         {/* Floating decorative elements */}
         <div className="absolute top-1/3 right-1/3 w-24 h-24 opacity-20 animate-float animation-delay-2000 pointer-events-none">
@@ -219,6 +221,7 @@ export default function ProductsSection() {
             xmlns="http://www.w3.org/2000/svg"
             className="w-full h-full"
           >
+            <title>Decorative circle</title>
             <path
               d="M180 100C180 144.183 144.183 180 100 180C55.8172 180 20 144.183 20 100C20 55.8172 55.8172 20 100 20C144.183 20 180 55.8172 180 100Z"
               stroke="rgba(217, 119, 6, 0.5)"
@@ -233,6 +236,7 @@ export default function ProductsSection() {
             xmlns="http://www.w3.org/2000/svg"
             className="w-full h-full"
           >
+            <title>Decorative rectangle</title>
             <rect
               x="40"
               y="40"
@@ -251,6 +255,7 @@ export default function ProductsSection() {
             xmlns="http://www.w3.org/2000/svg"
             className="w-full h-full"
           >
+            <title>Decorative diamond</title>
             <path
               d="M20 100L100 20L180 100L100 180L20 100Z"
               stroke="rgba(22, 101, 52, 0.5)"
@@ -261,12 +266,12 @@ export default function ProductsSection() {
 
         {/* Subtle dot patterns */}
         <div className="absolute top-0 left-0 w-full h-full opacity-5 pointer-events-none">
-          <div className="absolute top-1/4 left-1/3 w-4 h-4 bg-amber-500 rounded-full"></div>
-          <div className="absolute top-1/2 left-1/5 w-3 h-3 bg-rose-500 rounded-full"></div>
-          <div className="absolute top-3/4 left-2/3 w-2 h-2 bg-green-500 rounded-full"></div>
-          <div className="absolute top-1/6 left-3/4 w-3 h-3 bg-amber-500 rounded-full"></div>
-          <div className="absolute top-5/6 left-1/6 w-4 h-4 bg-green-500 rounded-full"></div>
-          <div className="absolute top-2/5 left-4/5 w-2 h-2 bg-rose-500 rounded-full"></div>
+          <div className="absolute top-1/4 left-1/3 w-4 h-4 bg-amber-500 rounded-full" />
+          <div className="absolute top-1/2 left-1/5 w-3 h-3 bg-rose-500 rounded-full" />
+          <div className="absolute top-3/4 left-2/3 w-2 h-2 bg-green-500 rounded-full" />
+          <div className="absolute top-1/6 left-3/4 w-3 h-3 bg-amber-500 rounded-full" />
+          <div className="absolute top-5/6 left-1/6 w-4 h-4 bg-green-500 rounded-full" />
+          <div className="absolute top-2/5 left-4/5 w-2 h-2 bg-rose-500 rounded-full" />
         </div>
       </div>
 
@@ -385,6 +390,84 @@ export default function ProductsSection() {
               <div className="w-full md:w-5/12"></div>
             </motion.div>
           ))}
+
+          {/* View More Products Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            transition={{
+              duration: 0.6,
+              delay: productCategories.length * 0.2 + 0.3,
+            }}
+            className="relative flex justify-center mt-16"
+          >
+            {/* Final timeline dot */}
+            <div className="absolute left-1/2 top-0 transform -translate-x-1/2 flex items-center justify-center z-10">
+              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-400 to-amber-500 border-4 border-white shadow-lg" />
+            </div>
+
+            {/* View More Products Card */}
+            <div className="relative backdrop-filter backdrop-blur-lg bg-white bg-opacity-30 border border-white border-opacity-40 rounded-3xl p-8 shadow-2xl mt-3 max-w-md w-full mx-4">
+              {/* Background gradient */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-100/30 via-rose-100/20 to-green-100/30 opacity-60" />
+
+              {/* Decorative elements */}
+              <div className="absolute -top-2 -right-2 w-12 h-12 opacity-60">
+                <Image
+                  src="/images/flower1.png"
+                  alt="Decorative flower"
+                  width={48}
+                  height={48}
+                  className="object-contain animate-pulse"
+                />
+              </div>
+              <div className="absolute -bottom-2 -left-2 w-10 h-10 opacity-50">
+                <Image
+                  src="/images/leaf.png"
+                  alt="Decorative leaf"
+                  width={40}
+                  height={40}
+                  className="object-contain animate-pulse"
+                />
+              </div>
+
+              <div className="relative z-10 text-center">
+                <h3 className="text-xl font-bold text-gray-900 font-display mb-3">
+                  Explore Our Complete Collection
+                </h3>
+                <p className="text-gray-700 font-body text-sm mb-6">
+                  Discover hundreds of premium products across all categories in
+                  our comprehensive online store.
+                </p>
+
+                <Button
+                  onClick={() => router.push("/products")}
+                  className="relative overflow-hidden bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 hover:from-amber-500 hover:via-amber-600 hover:to-amber-700 border-0 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-8 py-3 text-base font-medium"
+                >
+                  <span className="relative z-10 flex items-center">
+                    <svg
+                      className="mr-2 h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                      />
+                    </svg>
+                    View More Products
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </span>
+
+                  {/* Animated background */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-all duration-700" />
+                </Button>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
 
