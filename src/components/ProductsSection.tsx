@@ -191,12 +191,12 @@ export default function ProductsSection() {
       { threshold: 0.1 }
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const currentRef = sectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      const currentRef = sectionRef.current;
       if (currentRef) {
         observer.unobserve(currentRef);
       }
