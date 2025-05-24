@@ -416,7 +416,8 @@
 
   /* Font display utility */
   .font-display {
-    font-family: var(--font-display), "Montserrat", system-ui, -apple-system, sans-serif;
+    font-family: var(--font-display), "Montserrat", system-ui, -apple-system,
+      sans-serif;
   }
 
   /* Hide scrollbar for mobile brand filter */

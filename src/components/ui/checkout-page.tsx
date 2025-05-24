@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { CartItem } from "@/components/ui/cart-sidebar";
 import Image from "next/image";
+import Link from "next/link";
 
 interface OrderData {
   orderNumber: string;
@@ -831,17 +832,21 @@ function OrderConfirmationStep({
       </div>
 
       <div className="flex space-x-4 justify-center">
-        <Button
-          variant="outline"
-          className="backdrop-filter backdrop-blur-md bg-white/40 border-white/50 hover:bg-white/60"
-        >
-          <Clock className="h-4 w-4 mr-2" />
-          Track Order
-        </Button>
-        <Button className="bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 border-0 shadow-lg text-white">
-          <Truck className="h-4 w-4 mr-2" />
-          Continue Shopping
-        </Button>
+        <Link href="/track-order">
+          <Button
+            variant="outline"
+            className="backdrop-filter backdrop-blur-md bg-white/40 border-white/50 hover:bg-white/60"
+          >
+            <Clock className="h-4 w-4 mr-2" />
+            Track Order
+          </Button>
+        </Link>
+        <Link href="/">
+          <Button className="bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 border-0 shadow-lg text-white">
+            <Truck className="h-4 w-4 mr-2" />
+            Continue Shopping
+          </Button>
+        </Link>
       </div>
     </motion.div>
   );

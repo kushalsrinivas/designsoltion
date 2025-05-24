@@ -18,7 +18,7 @@ import {
 const productCategories = [
   {
     id: "paper",
-    year: "2019",
+    year: "1",
     name: "Paper Products",
     description:
       "Introduced our first comprehensive line of high-quality paper products for businesses of all sizes.",
@@ -69,7 +69,7 @@ const productCategories = [
   },
   {
     id: "printers",
-    year: "2020",
+    year: "2",
     name: "Laser Printers",
     description:
       "Diversified our product range with cutting-edge laser printing technology for professional use.",
@@ -120,7 +120,7 @@ const productCategories = [
   },
   {
     id: "electronics",
-    year: "2021",
+    year: "3",
     name: "Electronic Goods",
     description:
       "Further expanded our catalog with essential electronic business solutions for the modern workplace.",

@@ -335,7 +335,7 @@ export function CompareProductsModal({
                       {/* Products Grid */}
                       <div
                         id="compare-scroll-container"
-                        className="h-full w-full overflow-x-auto overflow-y-auto p-6"
+                        className="h-full w-full overflow-x-auto overflow-y-scroll p-6"
                         style={{
                           scrollbarWidth: "thin",
                           scrollbarColor:
