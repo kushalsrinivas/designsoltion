@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Heart, ShoppingCart, Trash2, ArrowLeft } from "lucide-react";
+import { Heart, Trash2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AddToCartButton } from "@/components/ui/add-to-cart-button";
 import Image from "next/image";

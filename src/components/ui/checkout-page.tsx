@@ -9,10 +9,6 @@ import {
   MapPin,
   Package,
   CheckCircle,
-  User,
-  Phone,
-  Mail,
-  Home,
   Wallet,
   Smartphone,
   Tag,
@@ -660,8 +656,6 @@ function PaymentMethodStep({
 
 function OrderSummaryStep({
   items,
-  deliveryDetails,
-  paymentMethod,
   couponCode,
   appliedCoupon,
   onCouponChange,
@@ -751,7 +745,8 @@ function OrderSummaryStep({
         </div>
         {appliedCoupon && (
           <p className="text-sm text-green-600 mt-2">
-            Coupon "{appliedCoupon.code}" applied! {appliedCoupon.discount}% off
+            Coupon &quot;{appliedCoupon.code}&quot; applied!{" "}
+            {appliedCoupon.discount}% off
           </p>
         )}
       </div>
@@ -810,7 +805,8 @@ function OrderConfirmationStep({
         Order Confirmed!
       </h2>
       <p className="text-gray-600 mb-6">
-        Thank you for your order. We'll send you a confirmation email shortly.
+        Thank you for your order. We&apos;ll send you a confirmation email
+        shortly.
       </p>
 
       <div className="backdrop-filter backdrop-blur-md bg-white/30 border border-white/40 rounded-2xl p-6 mb-6">

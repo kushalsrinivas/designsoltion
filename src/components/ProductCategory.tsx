@@ -21,7 +21,6 @@ export type CategoryProps = {
 export default function ProductCategory({
   products,
   categoryName,
-  isInView,
 }: CategoryProps) {
   const [expandedProduct, setExpandedProduct] = useState<string | null>(null);
 
