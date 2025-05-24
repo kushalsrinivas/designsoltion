@@ -23,41 +23,46 @@ const productCategories = [
     description:
       "Introduced our first comprehensive line of high-quality paper products for businesses of all sizes.",
     color: "from-rose-200 to-rose-100",
-    icon: "/placeholder.svg?height=40&width=40",
+    icon: "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=40&h=40&fit=crop&crop=center",
     products: [
       {
         id: "notebook-premium",
         name: "Premium Notebook",
         description: "High-quality hardcover notebook with premium paper",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=300&fit=crop&crop=center",
         price: "$12.99",
       },
       {
         id: "stationery-set",
         name: "Executive Stationery Set",
         description: "Complete stationery set with letterhead and envelopes",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=300&h=300&fit=crop&crop=center",
         price: "$24.99",
       },
       {
         id: "business-cards",
         name: "Custom Business Cards",
         description: "Premium business cards with custom finishes",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=300&h=300&fit=crop&crop=center",
         price: "From $19.99",
       },
       {
         id: "brochures",
         name: "Tri-fold Brochures",
         description: "Professional brochures with high-quality printing",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=300&h=300&fit=crop&crop=center",
         price: "From $29.99",
       },
       {
         id: "journals",
         name: "Leather-bound Journals",
         description: "Elegant journals with premium paper and binding",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=300&h=300&fit=crop&crop=center",
         price: "$34.99",
       },
     ],
@@ -69,41 +74,46 @@ const productCategories = [
     description:
       "Diversified our product range with cutting-edge laser printing technology for professional use.",
     color: "from-amber-200 to-amber-100",
-    icon: "/placeholder.svg?height=40&width=40",
+    icon: "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=40&h=40&fit=crop&crop=center",
     products: [
       {
         id: "laser-mono",
         name: "LaserJet Pro Mono",
         description: "High-speed monochrome laser printer for office use",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=300&h=300&fit=crop&crop=center",
         price: "$249.99",
       },
       {
         id: "laser-color",
         name: "ColorJet X5000",
         description: "Professional color laser printer with duplex printing",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=300&h=300&fit=crop&crop=center",
         price: "$499.99",
       },
       {
         id: "toner-cartridge",
         name: "Premium Toner Cartridge",
         description: "Long-lasting toner cartridges for all printer models",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1585776245991-cf89dd7fc73a?w=300&h=300&fit=crop&crop=center",
         price: "From $79.99",
       },
       {
         id: "printer-maintenance",
         name: "Printer Maintenance Kit",
         description: "Complete maintenance kit for laser printers",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=300&h=300&fit=crop&crop=center",
         price: "$129.99",
       },
       {
         id: "printer-paper",
         name: "Premium Laser Paper",
         description: "High-quality paper optimized for laser printers",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=300&h=300&fit=crop&crop=center",
         price: "$19.99",
       },
     ],
@@ -115,20 +125,22 @@ const productCategories = [
     description:
       "Further expanded our catalog with essential electronic business solutions for the modern workplace.",
     color: "from-green-200 to-green-100",
-    icon: "/placeholder.svg?height=40&width=40",
+    icon: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=40&h=40&fit=crop&crop=center",
     products: [
       {
         id: "smart-scanner",
         name: "SmartScan Pro",
         description: "Portable document scanner with cloud integration",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=300&h=300&fit=crop&crop=center",
         price: "$179.99",
       },
       {
         id: "wireless-keyboard",
         name: "ErgoType Wireless Keyboard",
         description: "Ergonomic wireless keyboard with customizable keys",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=300&h=300&fit=crop&crop=center",
         price: "$89.99",
       },
       {
@@ -136,21 +148,24 @@ const productCategories = [
         name: "OfficePad Pro",
         description:
           "Tablet designed for business applications and note-taking",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=300&h=300&fit=crop&crop=center",
         price: "$349.99",
       },
       {
         id: "document-camera",
         name: "Document Camera HD",
         description: "High-definition camera for document presentation",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=300&h=300&fit=crop&crop=center",
         price: "$199.99",
       },
       {
         id: "smart-projector",
         name: "MiniProjector Plus",
         description: "Compact smart projector for meetings and presentations",
-        image: "/placeholder.svg?height=300&width=300",
+        image:
+          "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=300&fit=crop&crop=center",
         price: "$299.99",
       },
     ],
