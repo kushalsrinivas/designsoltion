@@ -124,7 +124,7 @@ export default function Home() {
               <div className="absolute -bottom-10 -right-10 w-20 h-20 bg-green-300 rounded-full filter blur-md opacity-30" />
               {/* backdrop-filter backdrop-blur-sm bg-transparent bg-opacity-20 border border-white border-opacity-30 rounded-3xl p-8 shadow-xl */}
               <div className="relative">
-                <h1 className="font-display text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
+                <h1 className="font-display font-sans text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
                   Aadevraj
                 </h1>
                 <div className="absolute -top-10 -left-10 w-20 h-20 bg-amber-300 rounded-full filter blur-md opacity-30">

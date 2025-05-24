@@ -291,8 +291,8 @@ export default function ProductsSection() {
         </div>
       </div>
 
-      {/* Decorative elements */}
-      <div className="absolute top-10 left-10 w-16 h-16 pointer-events-none">
+      {/* Decorative elements - hidden on small screens */}
+      <div className="hidden sm:block absolute top-6 left-6 md:top-10 md:left-10 w-12 h-12 md:w-16 md:h-16 pointer-events-none">
         <Image
           src="/images/flower1.png"
           alt="Decorative flower"
@@ -301,7 +301,7 @@ export default function ProductsSection() {
           className="object-contain opacity-60"
         />
       </div>
-      <div className="absolute bottom-10 right-10 w-16 h-16 pointer-events-none">
+      <div className="hidden sm:block absolute bottom-6 right-6 md:bottom-10 md:right-10 w-12 h-12 md:w-16 md:h-16 pointer-events-none">
         <Image
           src="/images/flower1.png"
           alt="Decorative flower"
@@ -317,24 +317,24 @@ export default function ProductsSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16 relative"
+          className="text-center mb-12 sm:mb-16 relative px-4"
         >
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-32 h-32 bg-amber-200 rounded-full filter blur-xl opacity-30"></div>
+            <div className="w-24 h-24 sm:w-32 sm:h-32 bg-amber-200 rounded-full filter blur-xl opacity-30" />
           </div>
-          <h2 className="relative z-10 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl font-display">
+          <h2 className="relative z-10 text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 font-display">
             Our Product Journey
           </h2>
-          <p className="relative z-10 mt-4 text-lg text-gray-700 font-body max-w-2xl mx-auto">
+          <p className="relative z-10 mt-3 sm:mt-4 text-base sm:text-lg text-gray-700 font-body max-w-2xl mx-auto px-4">
             Discover our evolution and the wide range of high-quality products
             designed to meet your business needs
           </p>
         </motion.div>
 
         {/* Timeline layout */}
-        <div className="relative max-w-4xl mx-auto">
-          {/* Center line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-300/50 via-rose-300/50 to-green-300/50 transform -translate-x-1/2"></div>
+        <div className="relative max-w-4xl mx-auto px-4">
+          {/* Center line - hidden on mobile, visible on md+ */}
+          <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-300/50 via-rose-300/50 to-green-300/50 transform -translate-x-1/2" />
 
           {/* Timeline items */}
           {productCategories.map((category, index) => (
@@ -343,33 +343,33 @@ export default function ProductsSection() {
               initial={{ opacity: 0, y: 50 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
-              className={`relative mb-16 flex items-center ${
-                index % 2 === 0 ? "flex-row" : "flex-row-reverse"
+              className={`relative mb-8 sm:mb-12 md:mb-16 flex flex-col md:flex-row md:items-center ${
+                index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
               } md:items-start`}
             >
-              {/* Timeline dot */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center z-10">
-                <div className="w-5 h-5 rounded-full bg-white border-4 border-amber-400"></div>
+              {/* Timeline dot - positioned differently on mobile */}
+              <div className="absolute left-4 md:left-1/2 top-6 md:top-auto md:transform md:-translate-x-1/2 flex items-center justify-center z-10">
+                <div className="w-4 h-4 md:w-5 md:h-5 rounded-full bg-white border-3 md:border-4 border-amber-400" />
               </div>
 
               {/* Content card */}
               <div
-                className={`w-full md:w-5/12 ${
+                className={`w-full md:w-5/12 pl-12 md:pl-0 ${
                   index % 2 === 0 ? "md:pr-12" : "md:pl-12"
                 }`}
               >
-                <div className="relative backdrop-filter backdrop-blur-sm bg-white bg-opacity-20 border border-white border-opacity-30 rounded-3xl p-6 shadow-xl transform-3d hover:translate-z-4 transition-all duration-300">
+                <div className="relative backdrop-filter backdrop-blur-sm bg-white bg-opacity-20 border border-white border-opacity-30 rounded-2xl md:rounded-3xl p-4 sm:p-6 shadow-xl transform-3d hover:translate-z-4 transition-all duration-300">
                   <div
-                    className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${category.color} opacity-20`}
-                  ></div>
+                    className={`absolute inset-0 rounded-2xl md:rounded-3xl bg-gradient-to-br ${category.color} opacity-20`}
+                  />
 
                   {/* Year badge */}
-                  <div className="absolute -top-3 -left-3 px-3 py-1 bg-gradient-to-r from-amber-400 to-amber-500 rounded-full text-white text-sm font-medium shadow-md">
+                  <div className="absolute -top-2 -left-2 md:-top-3 md:-left-3 px-2 py-1 md:px-3 bg-gradient-to-r from-amber-400 to-amber-500 rounded-full text-white text-xs md:text-sm font-medium shadow-md">
                     {category.year}
                   </div>
 
-                  {/* Decorative flower */}
-                  <div className="absolute -top-3 -right-3 w-8 h-8 opacity-70">
+                  {/* Decorative flower - hidden on small screens */}
+                  <div className="hidden sm:block absolute -top-3 -right-3 w-6 h-6 md:w-8 md:h-8 opacity-70">
                     <Image
                       src="/images/flower1.png"
                       alt="Decorative flower"
@@ -379,22 +379,23 @@ export default function ProductsSection() {
                     />
                   </div>
 
-                  <div className="relative z-10 pt-4">
-                    <h3 className="text-xl font-bold text-gray-900 font-display mb-2">
+                  <div className="relative z-10 pt-3 md:pt-4">
+                    <h3 className="text-lg md:text-xl font-bold text-gray-900 font-display mb-2">
                       {category.name}
                     </h3>
-                    <p className="text-gray-700 font-body text-sm mb-6">
+                    <p className="text-gray-700 font-body text-sm mb-4 md:mb-6">
                       {category.description}
                     </p>
 
                     {category.products.length > 0 && (
                       <Button
                         onClick={() => setSelectedCategory(category.id)}
-                        className="relative overflow-hidden bg-gradient-to-br from-amber-400 to-amber-500 border-0 shadow-sm"
+                        className="relative overflow-hidden bg-gradient-to-br from-amber-400 to-amber-500 border-0 shadow-sm text-sm md:text-base"
+                        size="sm"
                       >
                         <span className="relative z-10 flex items-center">
                           View Products
-                          <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                          <ArrowRight className="ml-1 md:ml-2 h-3 w-3 md:h-4 md:w-4 transition-transform group-hover:translate-x-1" />
                         </span>
                       </Button>
                     )}
@@ -402,8 +403,8 @@ export default function ProductsSection() {
                 </div>
               </div>
 
-              {/* Empty space for alternating layout */}
-              <div className="w-full md:w-5/12"></div>
+              {/* Empty space for alternating layout - only on desktop */}
+              <div className="hidden md:block w-full md:w-5/12" />
             </motion.div>
           ))}
 
@@ -423,12 +424,12 @@ export default function ProductsSection() {
             </div>
 
             {/* View More Products Card */}
-            <div className="relative backdrop-filter backdrop-blur-lg bg-white bg-opacity-30 border border-white border-opacity-40 rounded-3xl p-8 shadow-2xl mt-3 max-w-md w-full mx-4">
+            <div className="relative backdrop-filter backdrop-blur-lg bg-white bg-opacity-30 border border-white border-opacity-40 rounded-2xl md:rounded-3xl p-6 md:p-8 shadow-2xl mt-3 max-w-md w-full mx-4">
               {/* Background gradient */}
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-100/30 via-rose-100/20 to-green-100/30 opacity-60" />
+              <div className="absolute inset-0 rounded-2xl md:rounded-3xl bg-gradient-to-br from-amber-100/30 via-rose-100/20 to-green-100/30 opacity-60" />
 
-              {/* Decorative elements */}
-              <div className="absolute -top-2 -right-2 w-12 h-12 opacity-60">
+              {/* Decorative elements - hidden on small screens */}
+              <div className="hidden sm:block absolute -top-2 -right-2 w-10 h-10 md:w-12 md:h-12 opacity-60">
                 <Image
                   src="/images/flower1.png"
                   alt="Decorative flower"
@@ -437,7 +438,7 @@ export default function ProductsSection() {
                   className="object-contain animate-pulse"
                 />
               </div>
-              <div className="absolute -bottom-2 -left-2 w-10 h-10 opacity-50">
+              <div className="hidden sm:block absolute -bottom-2 -left-2 w-8 h-8 md:w-10 md:h-10 opacity-50">
                 <Image
                   src="/images/leaf.png"
                   alt="Decorative leaf"
@@ -448,25 +449,26 @@ export default function ProductsSection() {
               </div>
 
               <div className="relative z-10 text-center">
-                <h3 className="text-xl font-bold text-gray-900 font-display mb-3">
+                <h3 className="text-lg md:text-xl font-bold text-gray-900 font-display mb-3">
                   Explore Our Complete Collection
                 </h3>
-                <p className="text-gray-700 font-body text-sm mb-6">
+                <p className="text-gray-700 font-body text-sm mb-4 md:mb-6">
                   Discover hundreds of premium products across all categories in
                   our comprehensive online store.
                 </p>
 
                 <Button
                   onClick={() => router.push("/products")}
-                  className="relative overflow-hidden bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 hover:from-amber-500 hover:via-amber-600 hover:to-amber-700 border-0 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-8 py-3 text-base font-medium"
+                  className="relative overflow-hidden bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 hover:from-amber-500 hover:via-amber-600 hover:to-amber-700 border-0 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 px-6 md:px-8 py-2.5 md:py-3 text-sm md:text-base font-medium"
                 >
                   <span className="relative z-10 flex items-center">
                     <svg
-                      className="mr-2 h-5 w-5"
+                      className="mr-1.5 md:mr-2 h-4 w-4 md:h-5 md:w-5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
+                      <title>Shopping bag icon</title>
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -474,8 +476,9 @@ export default function ProductsSection() {
                         d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                       />
                     </svg>
-                    View More Products
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    <span className="hidden sm:inline">View More Products</span>
+                    <span className="sm:hidden">View Products</span>
+                    <ArrowRight className="ml-1.5 md:ml-2 h-4 w-4 md:h-5 md:w-5 transition-transform group-hover:translate-x-1" />
                   </span>
 
                   {/* Animated background */}
@@ -493,7 +496,7 @@ export default function ProductsSection() {
         onOpenChange={(open) => !open && setSelectedCategory(null)}
       >
         <DialogContent
-          className="max-w-[90%] xl:max-w-[80%] p-0 rounded-2xl overflow-hidden"
+          className="max-w-[95%] sm:max-w-[90%] xl:max-w-[80%] max-h-[90vh] p-0 rounded-xl md:rounded-2xl overflow-hidden"
           style={{
             background: "rgba(255, 255, 255, 0.7)",
             backdropFilter: "blur(16px)",
@@ -798,29 +801,29 @@ export default function ProductsSection() {
             </motion.div>
 
             <div className="relative z-10">
-              <DialogHeader className="p-6 border-b border-white/30">
-                <DialogTitle className="text-2xl font-display">
+              <DialogHeader className="p-4 sm:p-6 border-b border-white/30">
+                <DialogTitle className="text-xl sm:text-2xl font-display pr-8">
                   {currentCategory?.name} Collection
                 </DialogTitle>
-                <DialogClose className="absolute right-4 top-4 rounded-full p-1.5 bg-white/30 backdrop-blur-sm opacity-70 hover:opacity-100 transition-opacity">
-                  <X className="h-5 w-5" />
+                <DialogClose className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-full p-1.5 bg-white/30 backdrop-blur-sm opacity-70 hover:opacity-100 transition-opacity">
+                  <X className="h-4 w-4 sm:h-5 sm:w-5" />
                 </DialogClose>
               </DialogHeader>
 
-              <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[70vh] overflow-y-auto">
+              <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-h-[60vh] sm:max-h-[70vh] overflow-y-auto">
                 {currentCategory?.products.map((product) => (
                   <motion.div
                     key={product.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4 }}
-                    className="relative backdrop-filter backdrop-blur-sm bg-white/50 border border-white/60 rounded-2xl p-5 shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="relative backdrop-filter backdrop-blur-sm bg-white/50 border border-white/60 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-lg hover:shadow-xl transition-all duration-300"
                     style={{
                       boxShadow:
                         "0 8px 20px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.8)",
                     }}
                   >
-                    <div className="relative w-full h-40 mb-4 overflow-hidden rounded-xl perspective">
+                    <div className="relative w-full h-32 sm:h-40 mb-3 md:mb-4 overflow-hidden rounded-lg md:rounded-xl perspective">
                       <motion.div
                         className="w-full h-full"
                         whileHover={{ rotateY: 5, rotateX: -5, scale: 1.05 }}
@@ -836,21 +839,21 @@ export default function ProductsSection() {
                       </motion.div>
                     </div>
 
-                    <h4 className="text-lg font-bold text-gray-900 font-display mb-1">
+                    <h4 className="text-base sm:text-lg font-bold text-gray-900 font-display mb-1">
                       {product.name}
                     </h4>
-                    <p className="text-gray-700 font-body text-sm mb-2 line-clamp-2">
+                    <p className="text-gray-700 font-body text-xs sm:text-sm mb-2 line-clamp-2">
                       {product.description}
                     </p>
-                    <p className="text-amber-600 font-medium mb-3">
+                    <p className="text-amber-600 font-medium mb-3 text-sm sm:text-base">
                       {product.price}
                     </p>
 
-                    <div className="flex justify-between items-center">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:items-center">
                       <Button
                         variant="outline"
                         size="sm"
-                        className="relative overflow-hidden group bg-white/50 border-white/60 hover:bg-white/70 transition-all"
+                        className="relative overflow-hidden group bg-white/50 border-white/60 hover:bg-white/70 transition-all text-xs sm:text-sm"
                       >
                         <span className="relative z-10 flex items-center">
                           Details
@@ -860,7 +863,7 @@ export default function ProductsSection() {
 
                       <Button
                         size="sm"
-                        className="relative overflow-hidden bg-gradient-to-br from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 border-0 shadow-sm hover:shadow transition-all"
+                        className="relative overflow-hidden bg-gradient-to-br from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 border-0 shadow-sm hover:shadow transition-all text-xs sm:text-sm"
                       >
                         <span className="relative z-10 flex items-center">
                           Get Quote

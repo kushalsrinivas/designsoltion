@@ -901,7 +901,76 @@ export default function ProductsPage() {
         }}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
+          {/* Mobile Layout */}
+          <div className="block lg:hidden">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => router.back()}
+                  className="backdrop-filter backdrop-blur-md bg-white/30 hover:bg-white/50 border border-white/40 shadow-lg transition-all duration-300 p-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                <h1 className="text-xl font-bold text-gray-900 font-display">
+                  Products
+                </h1>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                {/* Wishlist Button - Mobile */}
+                <Button
+                  onClick={() => setShowWishlistPage(true)}
+                  variant="ghost"
+                  size="sm"
+                  className="backdrop-filter backdrop-blur-md bg-white/30 hover:bg-white/50 border border-white/40 shadow-lg transition-all duration-300 p-2 relative"
+                >
+                  <Heart className="h-4 w-4" />
+                  {favorites.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {favorites.length}
+                    </span>
+                  )}
+                </Button>
+
+                {/* Cart Button - Mobile */}
+                <Button
+                  onClick={() => setShowCartSidebar(true)}
+                  variant="ghost"
+                  size="sm"
+                  className="backdrop-filter backdrop-blur-md bg-white/30 hover:bg-white/50 border border-white/40 shadow-lg transition-all duration-300 p-2 relative"
+                >
+                  <ShoppingCart className="h-4 w-4" />
+                  {cartItems.length > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {cartItems.reduce((sum, item) => sum + item.quantity, 0)}
+                    </span>
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            {/* Second row for mobile */}
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600 backdrop-filter backdrop-blur-md bg-white/30 px-3 py-1 rounded-full border border-white/40">
+                {filteredProducts.length} products
+              </span>
+              {compareProducts.length > 0 && (
+                <Button
+                  onClick={() => setShowCompareModal(true)}
+                  size="sm"
+                  className="bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 border-0 shadow-lg text-white"
+                >
+                  <GitCompare className="h-4 w-4 mr-1" />
+                  Compare ({compareProducts.length})
+                </Button>
+              )}
+            </div>
+          </div>
+
+          {/* Desktop Layout */}
+          <div className="hidden lg:flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
@@ -969,22 +1038,22 @@ export default function ProductsPage() {
           <div className="relative mb-6">
             <div className="relative backdrop-filter backdrop-blur-xl bg-white/25 border border-white/40 rounded-3xl p-1 shadow-2xl">
               <div className="flex items-center">
-                <Search className="h-5 w-5 text-gray-500 ml-4" />
+                <Search className="h-5 w-5 text-gray-500 ml-4 flex-shrink-0" />
                 <Input
                   type="text"
-                  placeholder="Search products, categories, or features..."
+                  placeholder="Search products..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 bg-transparent border-0 focus:ring-0 text-gray-900 placeholder-gray-500 px-4 py-3"
+                  className="flex-1 bg-transparent border-0 focus:ring-0 text-gray-900 placeholder-gray-500 px-4 py-3 text-sm sm:text-base"
                 />
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowFilters(!showFilters)}
-                  className="mr-2 backdrop-filter backdrop-blur-md bg-white/40 hover:bg-white/60 border border-white/50"
+                  className="mr-2 backdrop-filter backdrop-blur-md bg-white/40 hover:bg-white/60 border border-white/50 flex-shrink-0"
                 >
-                  <SlidersHorizontal className="h-4 w-4 mr-2" />
-                  Filters
+                  <SlidersHorizontal className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Filters</span>
                 </Button>
               </div>
             </div>
@@ -997,48 +1066,53 @@ export default function ProductsPage() {
             transition={{ delay: 0.2 }}
             className="mb-6"
           >
-            <div className="flex items-center space-x-3 overflow-x-auto pb-2">
-              <span className="text-sm font-medium text-gray-700 whitespace-nowrap">
+            <div className="flex items-start space-x-3 overflow-x-auto pb-2 scrollbar-hide">
+              <span className="text-sm font-medium text-gray-700 whitespace-nowrap flex-shrink-0 pt-2">
                 Brands:
               </span>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedBrand("all")}
-                className={`flex-shrink-0 px-4 py-2 rounded-2xl backdrop-filter backdrop-blur-md border transition-all duration-300 ${
-                  selectedBrand === "all"
-                    ? "bg-gradient-to-r from-amber-400/80 to-amber-500/80 border-amber-300/60 text-white shadow-lg shadow-amber-400/25"
-                    : "bg-white/30 border-white/40 text-gray-700 hover:bg-white/50"
-                }`}
-              >
-                <span className="text-sm font-medium">All Brands</span>
-              </motion.button>
-              {brands.map((brand) => (
+              <div className="flex space-x-2 min-w-0">
                 <motion.button
-                  key={brand.id}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setSelectedBrand(brand.id)}
-                  className={`flex-shrink-0 flex items-center space-x-2 px-4 py-2 rounded-2xl backdrop-filter backdrop-blur-md border transition-all duration-300 ${
-                    selectedBrand === brand.id
-                      ? `bg-gradient-to-r ${brand.color} border-white/60 text-white shadow-lg shadow-current/25`
+                  onClick={() => setSelectedBrand("all")}
+                  className={`flex-shrink-0 px-3 sm:px-4 py-2 rounded-2xl backdrop-filter backdrop-blur-md border transition-all duration-300 ${
+                    selectedBrand === "all"
+                      ? "bg-gradient-to-r from-amber-400/80 to-amber-500/80 border-amber-300/60 text-white shadow-lg shadow-amber-400/25"
                       : "bg-white/30 border-white/40 text-gray-700 hover:bg-white/50"
                   }`}
                 >
-                  <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
-                    <Image
-                      src={brand.logo}
-                      alt={brand.name}
-                      width={16}
-                      height={16}
-                      className="object-contain"
-                    />
-                  </div>
-                  <span className="text-sm font-medium whitespace-nowrap">
-                    {brand.name}
-                  </span>
+                  <span className="text-xs sm:text-sm font-medium">All</span>
                 </motion.button>
-              ))}
+                {brands.map((brand) => (
+                  <motion.button
+                    key={brand.id}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setSelectedBrand(brand.id)}
+                    className={`flex-shrink-0 flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-2xl backdrop-filter backdrop-blur-md border transition-all duration-300 ${
+                      selectedBrand === brand.id
+                        ? `bg-gradient-to-r ${brand.color} border-white/60 text-white shadow-lg shadow-current/25`
+                        : "bg-white/30 border-white/40 text-gray-700 hover:bg-white/50"
+                    }`}
+                  >
+                    <div className="w-4 h-4 sm:w-6 sm:h-6 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                      <Image
+                        src={brand.logo}
+                        alt={brand.name}
+                        width={12}
+                        height={12}
+                        className="object-contain sm:w-4 sm:h-4"
+                      />
+                    </div>
+                    <span className="text-xs sm:text-sm font-medium whitespace-nowrap hidden sm:inline">
+                      {brand.name}
+                    </span>
+                    <span className="text-xs font-medium whitespace-nowrap sm:hidden">
+                      {brand.name.split(" ")[0]}
+                    </span>
+                  </motion.button>
+                ))}
+              </div>
             </div>
           </motion.div>
 
@@ -1051,7 +1125,7 @@ export default function ProductsPage() {
                 exit={{ opacity: 0, height: 0 }}
                 className="backdrop-filter backdrop-blur-xl bg-white/25 border border-white/40 rounded-3xl p-6 mb-6 shadow-2xl"
               >
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div>
                     <label
                       htmlFor="category-select"
@@ -1335,7 +1409,7 @@ export default function ProductsPage() {
         open={!!selectedProduct}
         onOpenChange={(open) => !open && setSelectedProduct(null)}
       >
-        <DialogContent className="max-w-[90%] xl:max-w-[80%] p-0 rounded-3xl overflow-hidden backdrop-filter backdrop-blur-xl bg-white/90 border border-white/60 shadow-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-[95%] sm:max-w-[90%] xl:max-w-[80%] p-0 rounded-2xl sm:rounded-3xl overflow-hidden backdrop-filter backdrop-blur-xl bg-white/90 border border-white/60 shadow-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
           {selectedProduct && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -1343,41 +1417,41 @@ export default function ProductsPage() {
               className="relative"
             >
               {/* Enhanced Header */}
-              <DialogHeader className="p-6 border-b border-white/30 backdrop-filter backdrop-blur-md bg-white/30 sticky top-0 z-20">
+              <DialogHeader className="p-4 sm:p-6 border-b border-white/30 backdrop-filter backdrop-blur-md bg-white/30 sticky top-0 z-20">
                 <div className="flex items-start justify-between">
                   <div className="flex-1 pr-4">
-                    <DialogTitle className="text-3xl font-bold text-gray-900 font-display mb-2">
+                    <DialogTitle className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 font-display mb-2">
                       {selectedProduct.name}
                     </DialogTitle>
-                    <div className="flex items-center space-x-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                       <div className="flex items-center">
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={`modal-star-${selectedProduct.id}-${i}`}
-                            className={`h-5 w-5 ${
+                            className={`h-4 w-4 sm:h-5 sm:w-5 ${
                               i < Math.floor(selectedProduct.rating)
                                 ? "text-amber-400 fill-current"
                                 : "text-gray-300"
                             }`}
                           />
                         ))}
+                        <span className="text-sm sm:text-base text-gray-600 ml-2">
+                          {selectedProduct.rating} ({selectedProduct.reviews}{" "}
+                          reviews)
+                        </span>
                       </div>
-                      <span className="text-gray-600">
-                        {selectedProduct.rating} ({selectedProduct.reviews}{" "}
-                        reviews)
-                      </span>
-                      <span className="text-xs text-gray-500 backdrop-filter backdrop-blur-md bg-white/40 px-3 py-1 rounded-full border border-white/40">
+                      <span className="text-xs text-gray-500 backdrop-filter backdrop-blur-md bg-white/40 px-3 py-1 rounded-full border border-white/40 w-fit">
                         {selectedProduct.categoryName}
                       </span>
                     </div>
                   </div>
-                  <DialogClose className="rounded-full p-3 backdrop-filter backdrop-blur-md bg-white/50 hover:bg-white/70 border border-white/50 transition-all duration-300">
-                    <X className="h-6 w-6" />
+                  <DialogClose className="rounded-full p-2 sm:p-3 backdrop-filter backdrop-blur-md bg-white/50 hover:bg-white/70 border border-white/50 transition-all duration-300 flex-shrink-0">
+                    <X className="h-5 w-5 sm:h-6 sm:w-6" />
                   </DialogClose>
                 </div>
               </DialogHeader>
 
-              <div className="p-8 grid grid-cols-1 lg:grid-cols-2 gap-12">
+              <div className="p-4 sm:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
                 {/* Enhanced Product Image Section */}
                 <div className="relative">
                   {/* Product badges */}

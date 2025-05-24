@@ -416,6 +416,16 @@
 
   /* Font display utility */
   .font-display {
-    font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    font-family: var(--font-display), "Montserrat", system-ui, -apple-system, sans-serif;
+  }
+
+  /* Hide scrollbar for mobile brand filter */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
   }
 }
