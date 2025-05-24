@@ -43,7 +43,7 @@ export function WishlistToggle({
         onClick={() => onToggle(productId)}
         className={`${
           sizeClasses[size]
-        } p-0 rounded-full backdrop-filter backdrop-blur-md border shadow-lg transition-all duration-300 ${
+        } p-0 rounded-xl w-full backdrop-filter backdrop-blur-md border shadow-lg transition-all duration-300 ${
           isFavorited
             ? "bg-rose-500/80 border-rose-400/60 text-white shadow-rose-500/25"
             : "bg-white/40 border-white/50 text-gray-600 hover:bg-white/60 hover:shadow-lg"
